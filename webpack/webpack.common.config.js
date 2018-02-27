@@ -10,6 +10,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 var Visualizer = require('webpack-visualizer-plugin');
+var WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -39,11 +40,16 @@ module.exports = {
     new webpack.ProvidePlugin({
       _: 'lodash',
       join: ['lodash', 'join']
-
-})
+    }),
+    new WorkboxPlugin({
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true
+    })
   ],
   output: {
-    filename:'[name].[chunkhash].js',
+      filename:'[name].[hash].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     chunkFilename: '[name].bundle.js',

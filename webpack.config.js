@@ -7,6 +7,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -28,6 +29,16 @@ module.exports = {
     new UglifyJSPlugin({ sourceMap: true}), // tree shaking
     new ExtractTextPlugin({
       filename:'style.css'
+    }),
+    new webpack.ProvidePlugin({
+      _: 'lodash',
+      join: ['lodash', 'join']
+    }),
+    new WorkboxPlugin({
+          // these options encourage the ServiceWorkers to get in there fast
+          // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true
     })
   ],
   output: {

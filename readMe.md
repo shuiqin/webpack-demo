@@ -139,7 +139,7 @@ index.js 和 print都引用啦loadash
 new webpack.optimize.CommonsChunkPlugin({
           name: 'common' // Specify the common bundle's name.
  })
- 2) 动态引入
+ 2) 动态引入 异步引入  lodash.bundle.js 
      chunkFilename: '[name].bundle.js',
 
 ###Bundle Analysis### 
@@ -218,3 +218,40 @@ $ webpack --profile --json > stats.json
  
  如果npm包同时又是一个git仓库，在运行了npm version <update_type>和npm publish之后，
  npm会自动给git仓库打上一个跟当前版本号一样的tag，对于挂在github上的npm包很有用。
+ 
+ ###offline cache support####
+ npm install workbox-webpack-plugin --save-dev
+服务关闭后页面能出来
+ new WorkboxPlugin({
+          // these options encourage the ServiceWorkers to get in there fast
+          // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true
+    })
+
+if ('serviceWorker' in navigator) {
+   window.addEventListener('load', () => {
+     navigator.serviceWorker.register('/sw.js').then(registration => {
+       console.log('SW registered: ', registration);
+     }).catch(registrationError => {
+       console.log('SW registration failed: ', registrationError);
+     });
+   });   
+ }
+ 
+ 
+ ###TypeScript####
+ 1)  install the TypeScript compiler and loader by running:
+ 
+ npm install --save-dev typescript ts-loader
+ 
+ 2) 新建文件
+ tsconfig.json
+ index.ts
+ 
+ 3)具体参考
+ https://webpack.js.org/guides/typescript/
+
+
+###environment##
+webpack --config webpack.env.config.js  --env.NODE_ENV=dev  --env.production --progress
